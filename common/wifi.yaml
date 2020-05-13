@@ -1,0 +1,6 @@
+ssid: !secret WifiSSID
+password: !secret WifiPass
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+ap:
+  ssid: "$project Fallback" 
+  password: "dJW84PYJoCKf" # Random password used for fallback
