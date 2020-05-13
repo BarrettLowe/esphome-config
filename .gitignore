@@ -17,7 +17,6 @@
 **/lib/
 **/src/
 **/platformio.ini
-/secrets.yaml
+secrets.yaml
 /.esphome_venv/
 .vscode/esphome.code-workspace
-common/secrets.yaml
