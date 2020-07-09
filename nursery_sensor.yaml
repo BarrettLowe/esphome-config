@@ -1,0 +1,53 @@
+substitutions:
+  project: Nursery Sensor
+
+esphome:
+  name: nursery_sensor
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  !include common/wifi.yaml
+
+captive_portal:
+
+# Enable logging
+logger:
+
+<<: !include common/mqtt.yaml
+
+ota:
+
+
+sensor:
+    
+  - !include common/sensors/uptime.yaml
+  - !include common/sensors/wifi_signal.yaml
+  - platform: dht
+    pin: GPIO2
+    temperature:
+      name: "Nursery Temperature"
+      filters:
+        - lambda: return x * (9.0/5.0) + 32.0;
+      unit_of_measurement: "°F"
+    humidity:
+      name: "Nursery Humidity"
+    update_interval: 60s
+    model: DHT22
+
+
+binary_sensor:
+  - !include common/binary_sensors/status.yaml
+  - platform: gpio
+    pin: 
+        number: GPIO0
+        mode: INPUT_PULLUP
+        inverted: true
+    name: "Crib Occupied"
+    device_class: occupancy
+
+switch:
+  - platform: restart
+    name: "Nursery Sensor Restart"
+
+
