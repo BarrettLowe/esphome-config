@@ -1,0 +1,62 @@
+substitutions:
+  project: Under Cabinet Lights
+
+esphome:
+  name: under_cabinet_lights
+  platform: ESP32
+  board: nodemcu-32s
+
+  platformio_options:
+    lib_deps: NeoPixelBus@2.6.0
+
+wifi:
+  !include common/wifi.yaml
+
+captive_portal:
+
+# Enable logging
+logger:
+
+<<: !include common/mqtt.yaml
+
+ota:
+
+status_led:
+  pin: GPIO2
+
+light:
+  - platform: neopixelbus
+    type: GRBW
+    pin: GPIO23
+    num_leds: 180
+    name: "Under Cabinet Lights"
+    variant: SK6812
+    id: ledStrip
+
+
+  - platform: partition
+    name: "Counter Microwave"
+    segments:
+      - id: ledStrip
+        from: 0
+        to: 48
+
+  - platform: partition
+    name: "Counter Sink"
+    segments:
+      - id: ledStrip
+        from: 48
+        to: 140
+
+
+
+sensor:
+  - !include common/sensors/uptime.yaml
+  - !include common/sensors/wifi_signal.yaml
+
+
+switch:
+  - platform: restart
+    name: "Under Cabinet Lights Restart"
+
+
