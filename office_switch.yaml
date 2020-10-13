@@ -1,0 +1,44 @@
+substitutions:
+  project: Office Switch
+
+esphome:
+  name: office_switch
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  !include common/wifi.yaml
+
+
+captive_portal:
+
+# Enable logging
+logger:
+
+<<: !include common/mqtt.yaml
+
+ota:
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+
+# Register the Tuya MCU connection
+tuya:
+
+
+fan:
+  - platform: "tuya"
+    name: "Office Fan"
+    switch_datapoint: 1
+    speed_datapoint: 7
+
+light:
+  - platform: "tuya"
+    name: "Office Overhead Light"
+    switch_datapoint: 9
+
+sensor:
+  - !include common/sensors/uptime.yaml
+  - !include common/sensors/wifi_signal.yaml
