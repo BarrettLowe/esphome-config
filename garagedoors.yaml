@@ -6,8 +6,7 @@ esphome:
   platform: ESP8266
   board: nodemcuv2
 
-wifi:
-  !include common/wifi.yaml
+<<: !include common/wifi.yaml
 
 captive_portal:
 

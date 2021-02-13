@@ -6,8 +6,7 @@ esphome:
   platform: ESP8266
   board: esp01_1m
 
-wifi:
-  !include common/wifi.yaml
+<<: !include common/wifi.yaml
 
 captive_portal:
 
@@ -45,6 +44,8 @@ binary_sensor:
         inverted: true
     name: "Crib Occupied"
     device_class: occupancy
+    filters:
+      delayed_on_off: 1000ms
 
 switch:
   - platform: restart

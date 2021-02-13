@@ -1,0 +1,21 @@
+substitutions:
+  project: Pool Filler
+
+esphome:
+  name: pool_filler
+  platform: ESP32
+  board: nodemcu-32s
+
+wifi:
+  !include common/wifi.yaml
+
+logger:
+
+ota:
+
+<<: !include common/mqtt.yaml
+
+switch:
+  - platform: gpio
+    pin: 23
+    name: "Pool Fill"

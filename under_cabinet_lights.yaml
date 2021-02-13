@@ -9,10 +9,7 @@ esphome:
   platformio_options:
     lib_deps: NeoPixelBus@2.6.0
 
-wifi:
-  !include common/wifi.yaml
-
-captive_portal:
+<<: !include common/wifi.yaml
 
 # Enable logging
 logger:
@@ -32,23 +29,6 @@ light:
     name: "Under Cabinet Lights"
     variant: SK6812
     id: ledStrip
-
-
-  - platform: partition
-    name: "Counter Microwave"
-    segments:
-      - id: ledStrip
-        from: 0
-        to: 48
-
-  - platform: partition
-    name: "Counter Sink"
-    segments:
-      - id: ledStrip
-        from: 48
-        to: 140
-
-
 
 sensor:
   - !include common/sensors/uptime.yaml

@@ -10,11 +10,11 @@ esphome:
   platform: ESP32
   board: nodemcu-32s
    
-wifi:
-  !include common/wifi.yaml
+<<: !include common/wifi.yaml
 
   
 <<: !include common/api.yaml
+
 # Enable logging
 logger:
 

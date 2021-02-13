@@ -10,8 +10,7 @@ esphome:
 web_server:
   port: 80
 
-wifi:
-  !include ../wifi.yaml
+<<: !include ../wifi.yaml
 
 captive_portal:
 
