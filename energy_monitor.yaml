@@ -4,6 +4,7 @@ substitutions:
 # Interval of how often the power is updated
   update_time: 10s
   ctTune: "27681"
+  ctTuneLarge: "41880"
 
 esphome:
   name: energy_monitor
@@ -33,6 +34,31 @@ sensor:
   - platform: wifi_signal
     name: ${project} WiFi Signal
     update_interval: 60s
+  - platform: atm90e32
+    cs_pin: 4
+    phase_a:
+      voltage:
+        name: "Volts B"
+        id: "ic2Volts"
+        accuracy_decimals: 1
+      current:
+        name: "Current Phase A"
+        id: "phaseAAmps"
+        accuracy_decimals: 2
+      gain_voltage: 7063
+      gain_ct: ${ctTuneLarge}
+    phase_b:
+      current:
+        name: "Current Phase B"
+        id: "phaseBAmps"
+      gain_voltage: 7063
+      gain_ct: ${ctTuneLarge}
+    frequency:
+      name: "Freq"
+    line_frequency: 60Hz
+    gain_pga: 1X
+    update_interval: $update_time
+    current_phases: 3
   - platform: atm90e32
     cs_pin: 5
     phase_a:
@@ -69,6 +95,18 @@ sensor:
     lambda: return id(acAmps).state * id(ic1Volts).state * 2;
     unit_of_measurement: W
     update_interval: ${update_time}
+  - platform: template
+    name: "Home Electricity"
+    id: homePower
+    lambda: return id(phaseAAmps).state * id(ic2Volts).state + id(phaseBAmps).state * id(ic2Volts).state;
+    unit_of_measurement: W
+    update_interval: ${update_time}
+  - platform: template
+    name: "Total Home Amps"
+    id: homeAmps
+    lambda: return id(phaseAAmps).state + id(phaseBAmps).state;
+    unit_of_measurement: A
+    update_interval: ${update_time}
   - platform: total_daily_energy
     name: Pool Total kWh
     power_id: poolPower
@@ -78,6 +116,12 @@ sensor:
   - platform: total_daily_energy
     name: AC Total kWh
     power_id: acPower
+    filters:
+      - multiply: 0.001
+    unit_of_measurement: kWh
+  - platform: total_daily_energy
+    name: Total kWh
+    power_id: homePower
     filters:
       - multiply: 0.001
     unit_of_measurement: kWh
