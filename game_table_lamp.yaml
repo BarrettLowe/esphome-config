@@ -1,5 +1,0 @@
-substitutions:
-  project: "Game Table Lamp"
-  esphome_name: game_table_lamp
-
-<<: !include common/devices/etekcity_plug.yaml

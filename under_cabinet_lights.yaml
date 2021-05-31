@@ -14,25 +14,46 @@ esphome:
 # Enable logging
 logger:
 
+captive_portal:
+
 <<: !include common/mqtt.yaml
 
 ota:
 
-status_led:
-  pin: GPIO2
+# status_led:
+#   pin: GPIO2
+
+esp32_ble_tracker:
 
 light:
   - platform: neopixelbus
     type: GRBW
     pin: GPIO23
-    num_leds: 180
+    num_leds: 145
     name: "Under Cabinet Lights"
     variant: SK6812
     id: ledStrip
+    effects:
+      - addressable_scan:
+      - addressable_scan:
+          name: Scan Fast
+          move_interval: 10ms
+          scan_width: 2
+      - addressable_scan:
+          name: Scan Slow
+          move_interval: 100ms
+          scan_width: 3
+      - addressable_scan:
+          name: Scan Medium
+          move_interval: 50ms
+          scan_width: 3
 
 sensor:
   - !include common/sensors/uptime.yaml
   - !include common/sensors/wifi_signal.yaml
+  - platform: ble_rssi
+    mac_address: 58:cb:52:0c:0f:bd
+    name: "ucl_barretts_phone_ble_rssi"
 
 
 switch:

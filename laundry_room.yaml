@@ -1,0 +1,31 @@
+substitutions:
+  project: Laundry Room sensor
+
+esphome:
+  name: laundry_room_sensor
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+<<: !include common/wifi.yaml
+
+logger:
+
+<<: !include common/mqtt.yaml
+
+api:
+
+ota:
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO13
+    name: laundry motion
+    device_class: motion
+
+sensor:
+  - !include common/sensors/uptime.yaml
+  - !include common/sensors/wifi_signal.yaml
+
+switch:
+  - platform: restart
+    name: Laundry Sensor Restart

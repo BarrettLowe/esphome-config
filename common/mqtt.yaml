@@ -1,5 +1,5 @@
 mqtt:
-  broker: bnb.lowehomeautomation.xyz
+  broker: mqtt.lowehomeautomation.xyz
   username: localDevices
   password: d0gf00d
   client_id: "$project"

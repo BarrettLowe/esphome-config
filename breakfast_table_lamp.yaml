@@ -1,0 +1,5 @@
+substitutions:
+  project: "Breakfast Table Lamp"
+  esphome_name: breakfast_table_lamp
+
+<<: !include common/devices/etekcity_plug.yaml
