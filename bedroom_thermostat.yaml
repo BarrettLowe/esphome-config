@@ -1,0 +1,81 @@
+substitutions:
+  project: Bedroom Thermostat
+
+esphome:
+  name: bedroom_thermostat
+  platform: ESP8266
+  board: nodemcuv2
+
+<<: !include common/wifi.yaml
+
+captive_portal:
+
+# Enable logging
+logger:
+
+api:
+  password: !secret apiPass
+  encryption: 
+    key: !secret apiEncryptionKey
+
+ota:
+
+
+sensor:
+  - !include common/sensors/uptime.yaml
+  - !include common/sensors/wifi_signal.yaml
+  - platform: homeassistant
+    entity_id: sensor.bedroom_temperature
+    id: temperature_sensor
+    filters:
+      - lambda: return (x - 32.0) / (9.0/5.0);
+
+binary_sensor:
+  - !include common/binary_sensors/status.yaml
+
+switch:
+  - platform: restart
+    name: "Bedroom Thermostat Restart"
+  - platform: gpio
+    pin: 
+      number: D5
+      inverted: true
+    id: air_cond
+  - platform: gpio
+    pin: 
+      number: D6
+      inverted: true
+    id: heat
+  - platform: gpio
+    pin: 
+      number: D2
+      inverted: true
+    id: fan
+
+
+climate:
+  - platform: thermostat
+    name: "Bedroom Thermostat"
+    sensor: temperature_sensor
+    default_target_temperature_low: 69 °F
+    default_target_temperature_high: 78 °F
+    min_cooling_off_time: 300s
+    min_cooling_run_time: 300s
+    min_heating_off_time: 300s
+    min_heating_run_time: 300s
+    min_fanning_off_time: 60s
+    min_fanning_run_time: 60s
+    min_idle_time: 30s
+    fan_with_cooling: true
+    fan_with_heating: true
+    cool_action:
+      - switch.turn_on: air_cond
+    heat_action:
+      - switch.turn_on: heat
+    fan_only_action:
+      - switch.turn_on: fan
+    idle_action:
+      - switch.turn_off: air_cond
+      - switch.turn_off: heat
+      - switch.turn_off: fan
+
