@@ -1,0 +1,5 @@
+substitutions:
+  project: "Christmas Tree"
+  esphome_name: christmas_tree
+
+<<: !include common/devices/other_plug.yaml
