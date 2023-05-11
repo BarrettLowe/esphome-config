@@ -1,8 +1,8 @@
 substitutions:
-  project: Bedroom Thermostat
+  project: House Thermostat
 
 esphome:
-  name: bedroom_thermostat
+  name: house_thermostat
   platform: ESP8266
   board: nodemcuv2
 
@@ -27,40 +27,37 @@ sensor:
   - !include common/sensors/uptime.yaml
   - !include common/sensors/wifi_signal.yaml
   - platform: homeassistant
-    entity_id: sensor.bedroom_temperature
+    entity_id: sensor.house_temperature
     id: temperature_sensor
     filters:
       - lambda: return (x - 32.0) / (9.0/5.0);
-  - platform: dallas
-    name: "Attic Temperature"
-    address: 0xA40416A4F8CDFF28
 
 binary_sensor:
   - !include common/binary_sensors/status.yaml
 
 switch:
   - platform: restart
-    name: "Bedroom Thermostat Restart"
+    name: "House Thermostat Restart"
   - platform: gpio
     pin: 
-      number: D5
+      number: GPIO3
       inverted: true
     id: air_cond
   - platform: gpio
     pin: 
-      number: D6
+      number: GPIO12
       inverted: true
     id: heat
   - platform: gpio
     pin: 
-      number: D2
+      number: GPIO13
       inverted: true
     id: fan
 
 
 climate:
   - platform: thermostat
-    name: "Bedroom Thermostat"
+    name: "House Thermostat"
     sensor: temperature_sensor
     default_target_temperature_low: 69 °F
     default_target_temperature_high: 78 °F

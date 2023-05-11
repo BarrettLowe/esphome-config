@@ -1,0 +1,50 @@
+# Required substitutions:
+    # esphome_name
+    # project
+esphome:
+  name: "$esphome_name"
+  platform: ESP8266
+  board: esp01_1m
+
+# Seems like there isn't enough room for a webserver
+
+<<: !include ../wifi.yaml
+
+captive_portal:
+
+# Enable logging
+logger:
+
+<<: !include ../mqtt.yaml
+<<: !include ../ota.yaml
+  
+binary_sensor:
+  - platform: gpio
+    id: capacitive_switch
+    pin: GPIO1
+    filters:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    on_press:
+      then:
+        - light.toggle: the_light
+
+light:
+  - platform: monochromatic
+    name: "$project LED"
+    id: indicator
+    output: front_led
+    restore_mode: ALWAYS_OFF
+    default_transition_length: 500ms
+  - platform: binary
+    name: $project
+    id: the_light
+    output: relay
+
+output:
+  - platform: esp8266_pwm
+    id: front_led
+    pin: GPIO13
+  - platform: gpio
+    pin: GPIO14
+    id: relay

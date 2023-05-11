@@ -12,6 +12,7 @@ captive_portal:
 
 # Enable logging
 logger:
+  hardware_uart: UART0_SWAP
 
 <<: !include common/mqtt.yaml
 
