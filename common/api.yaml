@@ -1,2 +1,2 @@
 api:
-  password: !secret APIPass
+  encryption: !secret apiEncryptionKey
