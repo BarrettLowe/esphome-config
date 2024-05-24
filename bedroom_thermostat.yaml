@@ -14,11 +14,13 @@ captive_portal:
 logger:
 
 api:
-  password: !secret apiPass
   encryption: 
     key: !secret apiEncryptionKey
 
 ota:
+
+dallas:
+  - pin: D4
 
 
 sensor:
@@ -29,6 +31,9 @@ sensor:
     id: temperature_sensor
     filters:
       - lambda: return (x - 32.0) / (9.0/5.0);
+  - platform: dallas
+    name: "Attic Temperature"
+    address: 0xA40416A4F8CDFF28
 
 binary_sensor:
   - !include common/binary_sensors/status.yaml

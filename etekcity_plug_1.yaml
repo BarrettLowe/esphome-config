@@ -1,0 +1,5 @@
+substitutions:
+  project: "Etekcity Plug 1"
+  esphome_name: etekcity-plug-1
+
+<<: !include common/devices/etekcity_plug.yaml

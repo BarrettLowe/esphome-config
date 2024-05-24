@@ -30,17 +30,17 @@ sensor:
     
   - !include common/sensors/uptime.yaml
   - !include common/sensors/wifi_signal.yaml
-  - platform: dht
-    pin: D2
-    temperature:
-      name: "Garage Temperature"
-      filters:
-        - lambda: return x * (9.0/5.0) + 32.0;
-      unit_of_measurement: "°F"
-    humidity:
-      name: "Garage Humidity"
+  - platform: hx711
+    name: "Water Softener Salt"
+    dout_pin: D0
+    clk_pin: D5
+    gain: 128
     update_interval: 60s
-    model: DHT22
+    filters:
+      - calibrate_linear:
+        - 810208 -> 0
+        - 894512 -> 10
+    unit_of_measurement: lb
 
 
 binary_sensor:
@@ -56,46 +56,20 @@ binary_sensor:
     device_class: garage_door
     filters: 
       - delayed_on_off: 500ms
-    id: NearGarageSensor
-  - platform: gpio
-    pin: 
-      number: D5
-      mode: INPUT_PULLUP
-    device_class: garage_door
-    filters: 
-      - delayed_on_off: 500ms  
-    id: MiddleGarageSensor
-  - platform: gpio
-    pin:
-      number: D0
-      mode: INPUT_PULLUP
-    device_class: garage_door
-    filters: 
-      - delayed_on_off: 500ms
-    id: FarGarageSensor
+    id: GarageSensor
 switch:
-  
   - platform: gpio
     pin: 
       number: D6
       mode: OUTPUT
       inverted: True
-    id: midRelay
-#   - platform: template
-#     icon: "mdi:garage"
-#     turn_on_action:
-#       - switch.turn_on: midRelay
-#       - delay: 250ms
-#       - switch.turn_off: midRelay
-#     id: MiddleGarageSwitch
-
-
+    id: garRelay
   - platform: gpio
     pin: 
       number: D7
       mode: OUTPUT
       inverted: True
-    id: farRelay
+    name: "Water Main"
 #   - platform: template
 #     icon: "mdi:garage"
 #     turn_on_action:
@@ -107,48 +81,25 @@ switch:
   - platform: restart
     name: "Garage Control Restart"
 
+# cover:
+#   - platform: template
+#     name: "Garage"
+#     lambda: |-
+#       if (id(GarageSensor).state) {
+#         return COVER_OPEN;
+#       } else {
+#         return COVER_CLOSED;
+#       }
+#     open_action:
+#       - switch.turn_on: garRelay
+#       - delay: 250ms
+#       - switch.turn_off: garRelay
+#     close_action:
+#       - switch.turn_on: garRelay
+#       - delay: 250ms
+#       - switch.turn_off: garRelay
+#     stop_action:
+#       - switch.turn_on: garRelay
+#       - delay: 90ms
+#       - switch.turn_off: garRelay
 
-cover:
-  - platform: template
-    name: "Far Garage"
-    lambda: |-
-      if (id(FarGarageSensor).state) {
-        return COVER_OPEN;
-      } else {
-        return COVER_CLOSED;
-      }
-    open_action:
-      - switch.turn_on: farRelay
-      - delay: 250ms
-      - switch.turn_off: farRelay
-    close_action:
-      - switch.turn_on: farRelay
-      - delay: 250ms
-      - switch.turn_off: farRelay
-    stop_action:
-      - switch.turn_on: farRelay
-      - delay: 90ms
-      - switch.turn_off: farRelay
-    
-  - platform: template
-    name: "Middle Garage"
-    lambda: |-
-      if (id(MiddleGarageSensor).state) {
-        return COVER_OPEN;
-      } else {
-        return COVER_CLOSED;
-      }
-    open_action:
-      - switch.turn_on: midRelay
-      - delay: 250ms
-      - switch.turn_off: midRelay
-    close_action:
-      - switch.turn_on: midRelay
-      - delay: 250ms
-      - switch.turn_off: midRelay
-    stop_action:
-      - switch.turn_on: midRelay
-      - delay: 90ms
-      - switch.turn_off: midRelay
-
-    optimistic: true

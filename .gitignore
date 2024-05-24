@@ -20,3 +20,4 @@
 secrets.yaml
 /.venv/
 .vscode/esphome.code-workspace
+.venv/

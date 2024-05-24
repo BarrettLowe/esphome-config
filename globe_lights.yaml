@@ -1,0 +1,5 @@
+substitutions:
+  project: "Globe Lights"
+  esphome_name: globe_lights
+
+<<: !include common/devices/other_plug.yaml

@@ -1,2 +1,3 @@
 api:
-  encryption: !secret apiEncryptionKey
+  encryption: 
+    key: !secret apiEncryptionKey
