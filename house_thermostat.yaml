@@ -19,7 +19,7 @@ api:
   encryption: 
     key: !secret apiEncryptionKey
 
-ota:
+<<: !include common/ota.yaml
 
 
 sensor:
@@ -66,7 +66,7 @@ climate:
     min_fanning_run_time: 60s
     min_idle_time: 30s
     fan_with_cooling: true
-    fan_with_heating: true
+    fan_with_heating: false
     cool_action:
       - switch.turn_on: air_cond
     heat_action:

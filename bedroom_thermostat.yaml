@@ -17,10 +17,11 @@ api:
   encryption: 
     key: !secret apiEncryptionKey
 
-ota:
+<<: !include common/ota.yaml
 
-dallas:
+one_wire:
   - pin: D4
+    platform: gpio
 
 
 sensor:
@@ -31,7 +32,7 @@ sensor:
     id: temperature_sensor
     filters:
       - lambda: return (x - 32.0) / (9.0/5.0);
-  - platform: dallas
+  - platform: dallas_temp
     name: "Attic Temperature"
     address: 0xA40416A4F8CDFF28
 
@@ -62,8 +63,6 @@ climate:
   - platform: thermostat
     name: "Bedroom Thermostat"
     sensor: temperature_sensor
-    default_target_temperature_low: 69 °F
-    default_target_temperature_high: 78 °F
     min_cooling_off_time: 300s
     min_cooling_run_time: 300s
     min_heating_off_time: 300s
@@ -72,7 +71,7 @@ climate:
     min_fanning_run_time: 60s
     min_idle_time: 30s
     fan_with_cooling: true
-    fan_with_heating: true
+    fan_with_heating: false
     cool_action:
       - switch.turn_on: air_cond
     heat_action:
